@@ -1,0 +1,52 @@
+---
+# tasks file for nginx
+- name: Include Vars File
+  include_vars: main.yml
+
+- name: Install Nginx Dependent Environment
+  yum: name={{ item.name }} state=present
+  with_items:
+    - {name: gcc }
+    - {name: gcc-c++ }
+    - {name: pcre }
+    - {name: pcre-devel }
+    - {name: zlib }
+    - {name: zlib-devel }
+    - {name: openssl }
+    - {name: openssl-devel }
+
+- name: Copy Nginx Package
+  unarchive: src=nginx-{{ nginx_version }}.tar.gz dest=/tmp/ copy=yes
+
+- name: Mkdir Nginx Directory
+  file: path={{ nginx_dir }}/nginx-{{ nginx_version }} state=directory 
+
+- name: If Nginx Directory
+  shell: ls {{ nginx_dir }}/nginx-{{ nginx_version }}|wc -l
+  register: nginx_dir_status
+  changed_when: false
+
+- name: Make Install Nginx
+  shell: cd /tmp/nginx-{{ nginx_version }};./configure --user={{ nginx_run_user }} --group={{ nginx_run_group }} --prefix={{ nginx_dir }}/nginx-{{ nginx_version }} --with-http_stub_status_module --with-http_ssl_module --with-pcre;make && make install
+  when: nginx_dir_status == "0"
+  register: nginx_install_status
+
+- name: Soft Link Nginx
+  file: src={{ nginx_dir }}/nginx-{{ nginx_version }} dest={{ nginx_link_dir }} state=link
+
+- name: Create Nginx User Group
+  group: name={{ nginx_run_group }} state=present
+
+- name: Create Nginx User
+  user: name={{ nginx_run_user }} groups={{ nginx_run_group }} shell=/sbin/nologin create_home=no state=present
+
+- name: Copy Nginx Configure 
+  template: src=nginx.conf.j2 dest={{ nginx_link_dir }}/conf/nginx.conf
+  notify: Restart Nginx Server
+
+- name: Copy Nginx System Server Configure 
+  template: src=nginx.service.j2 dest=/usr/lib/systemd/system/nginx.service
+  notify: Reload Systemd
+
+- name: Start Nginx Server
+  systemd: name=nginx state=started
