@@ -12,7 +12,7 @@ Requirements
 
 Role Variables
 --------------
-下面介绍了可用变量和默认值(可参照"vars/main.yml"文件)
+下面介绍了可用变量和默认值(可参照"vars/main.yml"文件) \
 The following describes the available variables and default values(refer to the "vars/main.yml" file)
 
 1. Nginx 版本信息。\
