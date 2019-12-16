@@ -1,6 +1,6 @@
 Ansible Role: Nginx
 =========
-在RedHat/CentOS上安装Nginx的Ansible角色
+在RedHat/CentOS上安装Nginx的Ansible角色 \
 An Ansible Role that installs Nginx on RedHat/CentOS
 
 
