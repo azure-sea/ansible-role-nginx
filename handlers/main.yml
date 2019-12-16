@@ -1,0 +1,8 @@
+---
+# handlers file for nginx
+- name: Restart Nginx Server
+  systemd: name=nginx state=restarted
+  when: not nginx_install_status.changed
+
+- name: Reload Systemd
+  systemd: daemon_reload=yes
