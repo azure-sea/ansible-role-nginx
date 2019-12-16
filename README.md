@@ -6,8 +6,10 @@ An Ansible Role that installs Nginx on RedHat/CentOS
 
 Requirements
 ------------
-无。 \
-None.
+
+无。\
+ None.
+
 Role Variables
 --------------
 下面介绍了可用变量和默认值(可参照"vars/main.yml"文件)
