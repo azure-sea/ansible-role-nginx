@@ -1,0 +1,7 @@
+---
+# defaults file for nginx
+nginx_dir: /work/oldsoft
+nginx_link_dir: /work/nginx
+nginx_run_user: nginx
+nginx_run_group: nginx
+
