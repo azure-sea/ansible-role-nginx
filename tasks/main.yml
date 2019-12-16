@@ -48,5 +48,12 @@
   template: src=nginx.service.j2 dest=/usr/lib/systemd/system/nginx.service
   notify: Reload Systemd
 
+- name: Check Nginx Configure File
+  shell: "{{ nginx_link_dir }}/sbin/nginx -t"
+  register: nginx_check
+  changed_when:
+    - nginx_check.stdout.find('successful')
+    - false
+
 - name: Start Nginx Server
   systemd: name=nginx state=started
